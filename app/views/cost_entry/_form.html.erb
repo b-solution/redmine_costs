@@ -1,0 +1,31 @@
+<%= error_messages_for 'cost_entry' %>
+<%= back_url_hidden_field_tag %>
+
+<div class="box tabular">
+  <% if @cost_entry.new_record? %>
+      <% if params[:project_id] %>
+          <%= hidden_field_tag 'project_id', params[:project_id] %>
+      <% elsif params[:issue_id] %>
+          <%= hidden_field_tag 'issue_id', params[:issue_id] %>
+      <% else %>
+          <p><%= f.select :project_id, project_tree_options_for_select(Project.allowed_to(:log_time).all, :selected => @cost_entry.project, :include_blank => true) %></p>
+      <% end %>
+  <% end %>
+  <p>
+    <%= f.text_field :issue_id, :size => 6 %>
+    <span id="cost_entry_issue"><%= h("#{@cost_entry.issue.tracker.name} ##{@cost_entry.issue.id}: #{@cost_entry.issue.subject}") if @cost_entry.issue %></span>
+  </p>
+  <p><%= f.text_field :spent_on, :size => 10, :required => true %><%= calendar_for('cost_entry_spent_on') %></p>
+  <p><%= f.text_field :costs, :size => 6, :required => true %></p>
+  <p><%= f.text_field :comments, :size => 100, :maxlength => 255 %></p>
+  <p><%#= f.select :activity_id, activity_collection_for_select_options(@cost_entry), :required => true %></p>
+  <%= call_hook(:view_cost_edit_form_bottom, { :cost_entry => @cost_entry, :form => f }) %>
+</div>
+
+<%= javascript_tag do %>
+    observeAutocompleteField('cost_entry_issue_id', '<%= escape_javascript auto_complete_issues_path(:project_id => @project, :scope => (@project ? nil : 'all'))%>', {
+    select: function(event, ui) {
+    $('#cost_entry_issue').text(ui.item.label);
+    }
+    });
+<% end %>
