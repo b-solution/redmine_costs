@@ -7,10 +7,10 @@ Redmine::Plugin.register :redmine_costs do
   author_url 'http://github.com/bilel-kedidi'
 
   project_module :redmine_cost do
-    permission :edit_own_cost_entries, :cost_entry=> 'edit'
-    permission :edit_cost_entries, :cost_entry=> 'edit'
-    permission :view_cost_entries, :cost_entry=> 'index'
-    permission :log_cost, :cost_entry=> 'new'
+    permission :edit_own_cost_entries, :cost_entry=> ['edit', 'update']
+    permission :edit_cost_entries, :cost_entry=> ['edit', 'update']
+    permission :view_cost_entries, :cost_entry=> ['index', 'report']
+    permission :log_cost, :cost_entry=> ['new', 'create']
     permission :delete_cost, :cost_entry=> 'destroy'
   end
 
@@ -20,6 +20,7 @@ end
 Rails.application.config.to_prepare do
   class Hooks < Redmine::Hook::ViewListener
     render_on :view_projects_show_sidebar_bottom, :partial=> 'redmine_cost/show_overview'
+    render_on :view_issues_show_details_bottom, :partial=> 'redmine_cost/show_overview_issue'
   end
   ProjectsHelper.send(:include, RedmineCost::ProjectsHelperPatch)
   TimeEntry.send(:include, RedmineCost::TimeEntryPatch)

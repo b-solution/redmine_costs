@@ -1,6 +1,7 @@
 class CostEntryController < ApplicationController
   unloadable
   before_filter :find_cost_entry, :only => [:show, :edit, :update]
+  before_filter :find_cost_entries, :only => [:destroy]
   before_filter :find_optional_project, :only => [:new, :create, :index, :report]
 
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
@@ -10,7 +11,6 @@ class CostEntryController < ApplicationController
   helper :issues
   helper :queries
   include QueriesHelper
-  include TimelogHelper
 
   def index
     @query = CostEntryQuery.build_from_params(params, :project => @project, :name => '_')
@@ -45,7 +45,7 @@ class CostEntryController < ApplicationController
 
     #TODO PERMISSION to add later
 
-    # if @cost_entry.project && !User.current.allowed_to?(:log_time, @cost_entry.project)
+    # if @cost_entry.project && !User.current.allowed_to?(:log_cost, @cost_entry.project)
     #   render_403
     #   return
     # end
@@ -154,6 +154,16 @@ class CostEntryController < ApplicationController
   private
   def find_cost_entry
     @cost_entry = CostEntry.find(params[:id])
+  end
+
+  def find_cost_entries
+    @cost_entries = CostEntry.where(:id => params[:id] || params[:ids]).all
+    raise ActiveRecord::RecordNotFound if @cost_entries.empty?
+    raise Unauthorized unless @cost_entries.all? {|t| t.editable_by?(User.current)}
+    @projects = @cost_entries.collect(&:project).compact.uniq
+    @project = @projects.first if @projects.size == 1
+  rescue ActiveRecord::RecordNotFound
+    render_404
   end
 
   def cost_entry_scope(options={})
