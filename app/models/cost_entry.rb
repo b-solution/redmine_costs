@@ -27,6 +27,17 @@ class CostEntry < ActiveRecord::Base
   scope :on_project, lambda {|project, include_subprojects|
                      includes(:project).where(project.project_condition(include_subprojects))
                    }
+  scope :spent_between, lambda {|from, to|
+                        if from && to
+                          where("#{TimeEntry.table_name}.spent_on BETWEEN ? AND ?", from, to)
+                        elsif from
+                          where("#{TimeEntry.table_name}.spent_on >= ?", from)
+                        elsif to
+                          where("#{TimeEntry.table_name}.spent_on <= ?", to)
+                        else
+                          where(nil)
+                        end
+                      }
 
   def set_project_if_nil
     self.project = issue.project if issue && project.nil?
@@ -46,6 +57,29 @@ class CostEntry < ActiveRecord::Base
       end
     end
     attrs
+  end
+
+  def hours=(h)
+    write_attribute :costs, (h.is_a?(String) ? (h.to_f.round(2) || h) : h)
+  end
+
+  def costs
+    h = read_attribute(:costs)
+    if h.is_a?(Float)
+      h.round(2)
+    else
+      h
+    end
+  end
+
+  def spent_on=(date)
+    super
+    if spent_on.is_a?(Time)
+      self.spent_on = spent_on.to_date
+    end
+    self.tyear = spent_on ? spent_on.year : nil
+    self.tmonth = spent_on ? spent_on.month : nil
+    self.tweek = spent_on ? Date.civil(spent_on.year, spent_on.month, spent_on.day).cweek : nil
   end
 
 end

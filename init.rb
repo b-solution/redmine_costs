@@ -21,5 +21,7 @@ Rails.application.config.to_prepare do
   class Hooks < Redmine::Hook::ViewListener
     render_on :view_projects_show_sidebar_bottom, :partial=> 'redmine_cost/show_overview'
   end
+  ProjectsHelper.send(:include, RedmineCost::ProjectsHelperPatch)
+  TimeEntry.send(:include, RedmineCost::TimeEntryPatch)
   ProjectsController.send(:include, RedmineCost::ProjectPatch)
 end

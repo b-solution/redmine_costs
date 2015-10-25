@@ -7,6 +7,9 @@ class CreateCostEntries < ActiveRecord::Migration
       t.integer :activity_id
       t.float   :costs
       t.string  :comments
+      t.integer :tyear
+      t.integer :tmonth
+      t.integer :tweek
       t.date :spent_on
 
       t.timestamps

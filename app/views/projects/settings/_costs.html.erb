@@ -1,0 +1,43 @@
+<% costs = ProjectCost.where(project_id: @project.id) %>
+<%= form_tag(project_project_cost_set_costs_path(@project), :class => "tabular") do %>
+
+    <table class="list">
+      <thead>
+      <tr>
+        <th><%= l(:field_role) %></th>
+        <th><%= l(:field_costs) %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="<%= cycle('odd', 'even') %>">
+        <td class="name">
+          <%= 'Admin' %>
+        </td>
+        <td class="tick">
+          <% if cost = costs.detect{|c| c.role_id == -1 } %>
+              <%= number_field_tag :cost, cost.cost, name: "cost[-1][]" %>
+          <% else %>
+              <%= number_field_tag :cost,0, name: "cost[-1][]" %>
+          <% end %>
+        </td>
+      </tr>
+      <% Role.sorted.all.each do |role| %>
+          <tr class="<%= cycle('odd', 'even') %>">
+            <td class="name">
+              <%= role.name %>
+              <%= hidden_field_tag :role, role.id, name: "role[#{role.id}][]" %>
+            </td>
+            <td class="tick">
+              <% if cost = costs.detect{|c| c.role_id == role.id} %>
+                  <%= number_field_tag :cost, cost.cost, name: "cost[#{role.id}][]" %>
+              <% else %>
+                  <%= number_field_tag :cost,0, name: "cost[#{role.id}][]" %>
+              <% end %>
+            </td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <%= submit_tag l(:button_save) %>
+<% end %>
