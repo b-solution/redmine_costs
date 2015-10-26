@@ -19,7 +19,11 @@ class CostEntry < ActiveRecord::Base
 
 
   scope :visible, lambda {|*args|
-                  includes(:project).where(Project.allowed_to_condition(args.shift || User.current, :view_cost_entries, *args))
+                  if User.current.admin?
+                    includes(:project).where(Project.allowed_to_condition(args.shift || User.current, :view_cost_entries, *args))
+                  else
+                    includes(:project).where(user_id: User.current.id)
+                  end
                 }
   scope :on_issue, lambda {|issue|
                    includes(:issue).where("#{Issue.table_name}.root_id = #{issue.root_id} AND #{Issue.table_name}.lft >= #{issue.lft} AND #{Issue.table_name}.rgt <= #{issue.rgt}")

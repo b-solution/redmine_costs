@@ -24,5 +24,5 @@ Rails.application.config.to_prepare do
   end
   ProjectsHelper.send(:include, RedmineCost::ProjectsHelperPatch)
   TimeEntry.send(:include, RedmineCost::TimeEntryPatch)
-  ProjectsController.send(:include, RedmineCost::ProjectPatch)
+  ProjectsController.send(:include, RedmineCost::ProjectsControllerPatch)
 end

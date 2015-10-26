@@ -1,5 +1,5 @@
 <% if @total_cost.present? %>
-    <h3><%= l(:label_spent_time) %></h3>
+    <h3><%= l(:label_spent_cost) %></h3>
     <p><span class="icon icon-cost"><%= @total_cost %></span></p>
     <p>
       <% if User.current.allowed_to?(:log_cost, @project) %>

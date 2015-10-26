@@ -4,6 +4,10 @@ class CostEntryController < ApplicationController
   before_filter :find_cost_entries, :only => [:destroy]
   before_filter :find_optional_project, :only => [:new, :create, :index, :report]
 
+  before_filter :authorize, :only => [:show, :edit, :update, :destroy]
+  before_filter :authorize_global, :only => [:new, :create]
+
+
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
 
   helper :sort
