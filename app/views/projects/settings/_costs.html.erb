@@ -1,6 +1,8 @@
 <% costs = ProjectCost.where(project_id: @project.id) %>
 <%= form_tag(project_project_cost_set_costs_path(@project), :class => "tabular") do %>
 
+    <%= check_box_tag :inherit_cost, true, @project.herit_cost  %> inherits the costs of its subproject
+    <hr/>
     <table class="list">
       <thead>
       <tr>

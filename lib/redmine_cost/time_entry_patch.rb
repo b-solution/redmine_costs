@@ -15,6 +15,7 @@ module  RedmineCost
           ce.spent_on = self.spent_on
           ce.activity_id = self.activity_id
           ce.user_id = self.user_id
+          ce.time_entry_id = self.id
           project = self.project
           if project
             user = self.user

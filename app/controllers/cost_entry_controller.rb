@@ -4,8 +4,8 @@ class CostEntryController < ApplicationController
   before_filter :find_cost_entries, :only => [:destroy]
   before_filter :find_optional_project, :only => [:new, :create, :index, :report]
 
-  before_filter :authorize, :only => [:show, :edit, :update, :destroy]
-  before_filter :authorize_global, :only => [:new, :create]
+  # before_filter :authorize, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :authorize_global, :only =>  [:new, :create, :edit, :update, :destroy]
 
 
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
@@ -174,6 +174,9 @@ class CostEntryController < ApplicationController
     scope = @query.results_scope(options)
     if @issue
       scope = scope.on_issue(@issue)
+    end
+    if @project
+      scope = scope.on_project(@project, @project.herit_cost)
     end
     scope
   end

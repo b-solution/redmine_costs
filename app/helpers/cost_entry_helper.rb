@@ -9,6 +9,24 @@ module CostEntryHelper
     end
   end
 
+  def activity_collection_for_select_options(cost_entry=nil, project=nil)
+    project ||= @project
+    if project.nil?
+      activities = TimeEntryActivity.shared.active
+    else
+      activities = project.activities
+    end
+
+    collection = []
+    if cost_entry && cost_entry.activity && !cost_entry.activity.active?
+      collection << [ "--- #{l(:actionview_instancetag_blank_option)} ---", '' ]
+    else
+      collection << [ "--- #{l(:actionview_instancetag_blank_option)} ---", '' ] unless activities.detect(&:is_default)
+    end
+    activities.each { |a| collection << [a.name, a.id] }
+    collection
+  end
+
   def _report_cost_entries_path(project, issue, *args)
     if issue
       report_issue_cost_entries_path(issue, *args)

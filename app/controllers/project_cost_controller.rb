@@ -4,6 +4,9 @@ class ProjectCostController < ApplicationController
 
   def set_costs
     @project = Project.find(params[:project_id])
+    @project.herit_cost = params[:inherit_cost]
+    @project.save
+
     costs = params['cost']
     Role.sorted.all.each do |role|
       pc = ProjectCost.where(project_id: @project.id).where(role_id: role.id).first_or_initialize

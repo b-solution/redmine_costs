@@ -6,6 +6,7 @@ class CostEntry < ActiveRecord::Base
   belongs_to :project
   belongs_to :issue
   belongs_to :user
+  belongs_to :time_entry
   belongs_to :activity, :class_name => 'TimeEntryActivity', :foreign_key => 'activity_id'
 
   validates_presence_of :user_id, :project_id, :costs, :spent_on
@@ -15,7 +16,7 @@ class CostEntry < ActiveRecord::Base
   before_validation :set_project_if_nil
 
 
-  safe_attributes 'costs', 'comments', 'project_id', 'issue_id', 'activity_id', 'spent_on'
+  safe_attributes 'costs', 'comments', 'project_id', 'issue_id', 'activity_id', 'spent_on', 'time_entry_id'
 
 
   scope :visible, lambda {|*args|
@@ -73,6 +74,14 @@ class CostEntry < ActiveRecord::Base
       h.round(2)
     else
       h
+    end
+  end
+
+  def hours
+    if time_entry
+      time_entry.hours
+    else
+      nil
     end
   end
 
