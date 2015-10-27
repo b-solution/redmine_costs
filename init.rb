@@ -3,15 +3,12 @@ Redmine::Plugin.register :redmine_costs do
   author 'Bilel KEDIDI'
   description 'This is a plugin for Redmine'
   version '0.0.1'
-  url 'http://github.com/bilel-kedidi'
+  url 'http://github.com/bilel-kedidi/redmine_cost'
   author_url 'http://github.com/bilel-kedidi'
 
   project_module :redmine_cost do
-    permission :edit_own_cost_entries, :cost_entry=> ['edit', 'update']
-    permission :edit_cost_entries, :cost_entry=> ['edit', 'update']
-    permission :view_cost_entries, :cost_entry=> ['index', 'report']
+    permission :edit_own_cost_entries, :cost_entry=> ['index', 'report', 'edit', 'update', 'destroy']
     permission :log_cost, :cost_entry=> ['new', 'create']
-    permission :delete_cost, :cost_entry=> 'destroy'
   end
 
 end

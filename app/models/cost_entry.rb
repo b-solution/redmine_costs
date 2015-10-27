@@ -21,7 +21,7 @@ class CostEntry < ActiveRecord::Base
 
   scope :visible, lambda {|*args|
                   if User.current.admin?
-                    includes(:project).where(Project.allowed_to_condition(args.shift || User.current, :view_cost_entries, *args))
+                    includes(:project)
                   else
                     includes(:project).where(user_id: User.current.id)
                   end
@@ -49,7 +49,7 @@ class CostEntry < ActiveRecord::Base
   end
 
   def editable_by?(usr)
-    (usr == user && usr.allowed_to?(:edit_own_cost_entries, project)) || usr.allowed_to?(:edit_cost_entries, project)
+    usr == user && usr.allowed_to?(:edit_own_cost_entries, project)
   end
 
   def safe_attributes=(attrs, user=User.current)

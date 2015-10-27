@@ -10,9 +10,7 @@ module  RedmineCost
         before_filter :get_total_cost, only: [:show]
         def get_total_cost
           cond = @project.project_condition(@project.herit_cost)
-          if User.current.allowed_to?(:view_cost_entries, @project)
-            @total_cost = CostEntry.visible.where(cond).sum(:costs).to_f
-          end
+          @total_cost = CostEntry.visible.where(cond).sum(:costs).to_f
         end
       end
     end

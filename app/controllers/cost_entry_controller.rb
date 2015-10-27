@@ -1,10 +1,10 @@
 class CostEntryController < ApplicationController
   unloadable
-  before_filter :find_cost_entry, :only => [:show, :edit, :update]
+  before_filter :find_cost_entry, :only => [:edit, :update]
   before_filter :find_cost_entries, :only => [:destroy]
   before_filter :find_optional_project, :only => [:new, :create, :index, :report]
 
-  # before_filter :authorize, :only => [:new, :create, :edit, :update, :destroy]
+  before_filter :authorize, :only => [:new, :create, :edit, :update, :destroy]
   before_filter :authorize_global, :only =>  [:new, :create, :edit, :update, :destroy]
 
 
@@ -80,7 +80,6 @@ class CostEntryController < ApplicationController
             redirect_back_or_default project_cost_entries_path(@cost_entry.project)
           end
         }
-        format.api  { render :action => 'show', :status => :created, :location => cost_entry_url(@cost_entry) }
       end
     else
       respond_to do |format|
@@ -110,10 +109,6 @@ class CostEntryController < ApplicationController
         format.api  { render_validation_errors(@cost_entry) }
       end
     end
-  end
-
-  def show
-
   end
 
   def report
@@ -158,6 +153,13 @@ class CostEntryController < ApplicationController
   private
   def find_cost_entry
     @cost_entry = CostEntry.find(params[:id])
+    @issue = @cost_entry.issue
+    @project = @cost_entry.project
+    unless User.current.admin?
+      if @cost_entry.user_id != User.current.id
+        deny_access #unless User.current.allowed_to?(:edit_cost_entries, @project)
+      end
+    end
   end
 
   def find_cost_entries
@@ -192,3 +194,4 @@ class CostEntryController < ApplicationController
     render_404
   end
 end
+

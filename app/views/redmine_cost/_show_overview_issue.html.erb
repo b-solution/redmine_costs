@@ -1,6 +1,6 @@
 <%= issue_fields_rows do |rows|
 
-  if User.current.allowed_to?(:edit_cost_entries, @project)
+  if User.current.admin?
     costs = CostEntry.where(issue_id: @issue.id).map(&:costs).compact.sum
     rows.left l(:label_spent_cost), (costs > 0 ? link_to(costs, issue_cost_entries_path(@issue)) : "-"), :class => 'spent-costs'
 

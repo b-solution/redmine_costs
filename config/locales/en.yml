@@ -5,4 +5,5 @@ en:
    label_spent_cost: "Spent Cost"
    label_total_cost: "Total Cost"
    label_cost_setting: "Cost setting"
+   notice_unable_delete_cost_entry: "Unable to delete cost entry"
 
