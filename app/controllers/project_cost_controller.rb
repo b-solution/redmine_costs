@@ -18,6 +18,15 @@ class ProjectCostController < ApplicationController
       pc.cost = costs["-1"].first.to_f.round(2)
       pc.save
     end
+    update_time_entries(@project)
     redirect_to :back
   end
+
+  private
+  def update_time_entries(project)
+    project.time_entries.each do |time_entry|
+      ProjectCost.create_or_update_cost_entry(time_entry)
+    end
+  end
+
 end
