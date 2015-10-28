@@ -2,10 +2,10 @@
 
   if User.current.admin?
     costs = CostEntry.where(issue_id: @issue.id).map(&:costs).compact.sum
-    rows.left l(:label_spent_cost), (costs > 0 ? link_to(costs, issue_cost_entries_path(@issue)) : "-"), :class => 'spent-costs'
+    rows.left l(:label_spent_cost), (costs > 0 ? link_to(ProjectCostHelper.l_cost(costs, @issue.project ), issue_cost_entries_path(@issue)) : "-"), :class => 'spent-costs'
 
   elsif User.current.allowed_to?(:edit_own_cost_entries, @project)
     costs = CostEntry.where(issue_id: @issue.id).where(user_id: User.current.id).map(&:costs).compact.sum
-    rows.left l(:label_spent_cost), (costs > 0 ? link_to(costs, issue_cost_entries_path(@issue)) : "-"), :class => 'spent-costs'
+    rows.left l(:label_spent_cost), (costs > 0 ? link_to(ProjectCostHelper.l_cost(costs, @issue.project ), issue_cost_entries_path(@issue)) : "-"), :class => 'spent-costs'
   end
 end %>

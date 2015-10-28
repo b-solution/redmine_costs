@@ -1,6 +1,6 @@
 <% if @total_cost.present? %>
     <h3><%= l(:label_spent_cost) %></h3>
-    <p><span class="icon icon-cost"><%= @total_cost %></span></p>
+    <p><span class="icon icon-cost"><%= ProjectCostHelper.l_cost(@total_cost, @project) %></span></p>
     <p>
       <% if User.current.allowed_to?(:log_cost, @project) %>
           <%= link_to l(:button_log_cost), new_project_cost_entry_path(@project) %> |

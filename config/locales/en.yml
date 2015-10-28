@@ -4,6 +4,7 @@ en:
    field_costs: "Cost"
    label_spent_cost: "Spent Cost"
    label_total_cost: "Total Cost"
-   label_cost_setting: "Cost setting"
+   label_cost_setting: "Costs setting"
    notice_unable_delete_cost_entry: "Unable to delete cost entry"
+   include_the_costs_of_the_subprojects: "Include the costs of the subprojects"
 

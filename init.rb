@@ -6,6 +6,9 @@ Redmine::Plugin.register :redmine_costs do
   url 'http://github.com/bilel-kedidi/redmine_cost'
   author_url 'http://github.com/bilel-kedidi'
 
+  settings :default => {
+               'currency' => 'Currency'
+           }
   project_module :redmine_cost do
     permission :edit_own_cost_entries, :cost_entry=> ['index', 'report', 'edit', 'update', 'destroy']
     permission :log_cost, :cost_entry=> ['new', 'create']

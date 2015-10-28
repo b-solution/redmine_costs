@@ -7,7 +7,7 @@
 <% end %>
 
 <div class="total-costs">
-  <p><%= l(:label_total_cost) %>: <%= @total_costs %></p>
+  <p><%= l(:label_total_cost) %>: <%= ProjectCostHelper.l_cost(@total_costs, @project )  %></p>
 </div>
 
 <% unless @entries.empty? %>
