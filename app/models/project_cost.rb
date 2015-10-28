@@ -6,7 +6,8 @@ class ProjectCost < ActiveRecord::Base
     ce.project_id = time_entry.project_id
     ce.issue_id = time_entry.issue_id
     ce.spent_on = time_entry.spent_on
-    ce.activity_id = time_entry.activity_id
+    activity = CostEntryActivity.shared.active.detect{|c| c.is_default }
+    ce.activity_id = activity.id if activity
     ce.user_id = time_entry.user_id
     ce.time_entry_id = time_entry.id
     project = time_entry.project

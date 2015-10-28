@@ -7,12 +7,13 @@ class CostEntry < ActiveRecord::Base
   belongs_to :issue
   belongs_to :user
   belongs_to :time_entry
-  belongs_to :activity, :class_name => 'TimeEntryActivity', :foreign_key => 'activity_id'
+  belongs_to :activity, :class_name => 'CostEntryActivity', :foreign_key => 'activity_id'
 
-  validates_presence_of :user_id, :project_id, :costs, :spent_on
+  validates_presence_of :user_id, :project_id, :costs, :activity_id, :spent_on
   validates_numericality_of :costs, :allow_nil => true, :message => :invalid
   validates_length_of :comments, :maximum => 255, :allow_nil => true
   validates :spent_on, :date => true
+  # validates :activity_id
   before_validation :set_project_if_nil
 
 
