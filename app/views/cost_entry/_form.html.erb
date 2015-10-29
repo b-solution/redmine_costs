@@ -23,6 +23,7 @@
 </div>
 
 <%= javascript_tag do %>
+    $('#cost_entry_activity_id').parents('p').children('label').html('Cost item')
     observeAutocompleteField('cost_entry_issue_id', '<%= escape_javascript auto_complete_issues_path(:project_id => @project, :scope => (@project ? nil : 'all'))%>', {
     select: function(event, ui) {
     $('#cost_entry_issue').text(ui.item.label);
