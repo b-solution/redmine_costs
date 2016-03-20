@@ -22,6 +22,10 @@ class ProjectCostController < ApplicationController
     redirect_to :back
   end
 
+  def set_costs_items
+
+  end
+
   private
   def update_time_entries(project)
     project.time_entries.each do |time_entry|

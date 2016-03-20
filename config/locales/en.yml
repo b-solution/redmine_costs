@@ -2,6 +2,7 @@
 en:
    button_log_cost: "Log cost"
    field_costs: "Cost"
+   label_cost_plural: "Costs"
    label_spent_cost: "Spent Cost"
    label_total_cost: "Total Cost"
    label_cost_setting: "Costs setting"

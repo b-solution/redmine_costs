@@ -7,7 +7,7 @@ class CostEntryQuery < Query
       QueryColumn.new(:hours, :sortable => "#{TimeEntry.table_name}.hours"),
       QueryColumn.new(:spent_on, :sortable => ["#{CostEntry.table_name}.spent_on", "#{CostEntry.table_name}.created_at"], :default_order => 'desc', :groupable => true),
       QueryColumn.new(:user, :sortable => lambda {User.fields_for_order_statement}, :groupable => true),
-      QueryColumn.new(:activity, :sortable => "#{TimeEntryActivity.table_name}.position", :groupable => true),
+      QueryColumn.new(:activity, :sortable => "#{CostEntryActivity.table_name}.position", :groupable => true),
       QueryColumn.new(:issue, :sortable => "#{Issue.table_name}.id"),
       QueryColumn.new(:comments),
       QueryColumn.new(:costs, :sortable => "#{CostEntry.table_name}.costs"),
@@ -60,7 +60,7 @@ class CostEntryQuery < Query
                          :type => :list_optional, :values => users_values
     ) unless users_values.empty?
 
-    activities = (project ? project.activities : TimeEntryActivity.shared.active)
+    activities = (project ? project.activities : CostEntryActivity.shared.active)
     add_available_filter("activity_id",
                          :type => :list, :values => activities.map {|a| [a.name, a.id.to_s]}
     ) unless activities.empty?

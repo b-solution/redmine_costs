@@ -11,7 +11,11 @@ module CostEntryHelper
 
   def activity_collection_for_select_options(cost_entry=nil, project=nil)
     project ||= @project
-    activities = CostEntryActivity.shared.active
+    if project.nil?
+      activities = CostEntryActivity.shared.active
+    else
+      activities = project.active_cost_entry_activities
+    end
 
     collection = []
     if cost_entry && cost_entry.activity && !cost_entry.activity.active?

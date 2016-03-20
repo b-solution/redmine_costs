@@ -17,7 +17,7 @@ module  RedmineCost
 
       def project_settings_tabs_with_your_plugin
         tabs = project_settings_tabs_without_your_plugin
-        tabs.push({ :name => 'red',
+        tabs.push({ :name => 'cost_activities',
                     :action => :some_action,
                     :partial => 'projects/settings/costs',
                     :label => :label_cost_setting })
