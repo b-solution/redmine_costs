@@ -10,7 +10,9 @@ Redmine::Plugin.register :redmine_costs do
                'currency' => 'Currency'
            }
   project_module :redmine_costs do
-    permission :edit_own_cost_entries, :cost_entry => ['index', 'report', 'edit', 'update', 'destroy']
+    permission :edit_own_cost_entries, :cost_entry => ['index', 'report', 'edit',
+                                                       'update', 'destroy'],
+               :project_enumerations => [:update_cost_entry, :destroy_cost_entry]
     permission :log_cost, :cost_entry => ['new', 'create']
   end
 

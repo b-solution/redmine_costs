@@ -6,6 +6,7 @@ class CostEntry < ActiveRecord::Base
   belongs_to :project
   belongs_to :issue
   belongs_to :user
+  belongs_to :role
   belongs_to :time_entry
   belongs_to :activity, :class_name => 'CostEntryActivity', :foreign_key => 'activity_id'
 
@@ -15,6 +16,7 @@ class CostEntry < ActiveRecord::Base
   validates :spent_on, :date => true
   # validates :activity_id
   before_validation :set_project_if_nil
+  before_validation :set_role_if_nil
 
 
   safe_attributes 'costs', 'comments', 'project_id', 'issue_id', 'activity_id', 'spent_on', 'time_entry_id'
@@ -47,6 +49,19 @@ class CostEntry < ActiveRecord::Base
 
   def set_project_if_nil
     self.project = issue.project if issue && project.nil?
+  end
+
+  def set_role_if_nil
+    self.role_id = set_role if self.role_id.nil?
+  end
+
+  def set_role
+    member = project.members.where(user_id: user_id).first
+    if member
+      role = member.roles.first
+      return role.id
+    end
+    nil
   end
 
   def editable_by?(usr)

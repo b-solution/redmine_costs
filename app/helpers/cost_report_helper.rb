@@ -27,7 +27,7 @@ class CostReportHelper
     unless @criteria.empty?
       time_columns = %w(tyear tmonth tweek spent_on)
       @costs = []
-      @scope.includes(:issue, :activity).
+      @scope.includes(:issue, :activity, {:project=> [:members]}).
           group(@criteria.collect{|criteria| @available_criteria[criteria][:sql]} + time_columns).
           joins(@criteria.collect{|criteria| @available_criteria[criteria][:joins]}.compact).
           sum(:costs).each do |hash, costs|
@@ -101,9 +101,12 @@ class CostReportHelper
                             'tracker' => {:sql => "#{Issue.table_name}.tracker_id",
                                           :klass => Tracker,
                                           :label => :label_tracker},
-                            # 'activity' => {:sql => "#{CostEntry.table_name}.activity_id",
-                            #                :klass => TimeEntryActivity,
-                            #                :label => :label_activity},
+                            'activity' => {:sql => "#{CostEntry.table_name}.activity_id",
+                                           :klass => CostEntryActivity,
+                                           :label => "Cost Item"},
+                            'role' => {:sql => "#{CostEntry.table_name}.role_id",
+                                           :klass => Role,
+                                           :label => "Member role"},
                             'issue' => {:sql => "#{CostEntry.table_name}.issue_id",
                                         :klass => Issue,
                                         :label => :label_issue}

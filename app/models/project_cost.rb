@@ -16,6 +16,7 @@ class ProjectCost < ActiveRecord::Base
       if (role = user.membership(project)).present?
         pc = ProjectCost.where(project_id: project.id).detect{|c| c.role_id = role.id}
         if pc
+
           ce.costs = pc.cost * time_entry.hours
           ce.save
         end
