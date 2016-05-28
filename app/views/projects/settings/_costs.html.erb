@@ -11,29 +11,17 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="<%= cycle('odd', 'even') %>">
-        <td class="name">
-          <%= 'Admin' %>
-        </td>
-        <td class="tick">
-          <% if cost = costs.detect{|c| c.role_id == -1 } %>
-              <%= number_field_tag :cost, cost.cost, name: "cost[-1][]" %>
-          <% else %>
-              <%= number_field_tag :cost,0, name: "cost[-1][]" %>
-          <% end %>
-        </td>
-      </tr>
-      <% Role.sorted.all.each do |role| %>
+      <% @project.users.each do |user| %>
           <tr class="<%= cycle('odd', 'even') %>">
             <td class="name">
-              <%= role.name %>
-              <%= hidden_field_tag :role, role.id, name: "role[#{role.id}][]" %>
+              <%= user.name %>
+              <%= hidden_field_tag :user, user.id, name: "user[#{user.id}][]" %>
             </td>
             <td class="tick">
-              <% if cost = costs.detect{|c| c.role_id == role.id} %>
-                  <%= number_field_tag :cost, cost.cost, name: "cost[#{role.id}][]" %>
+              <% if cost = costs.detect{|c| c.user_id == user.id} %>
+                  <%= number_field_tag :cost, cost.cost, name: "cost[#{user.id}][]" %>
               <% else %>
-                  <%= number_field_tag :cost,0, name: "cost[#{role.id}][]" %>
+                  <%= number_field_tag :cost,0, name: "cost[#{user.id}][]" %>
               <% end %>
             </td>
           </tr>

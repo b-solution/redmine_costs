@@ -10,6 +10,7 @@ class CostEntry < ActiveRecord::Base
   belongs_to :time_entry
   belongs_to :activity, :class_name => 'CostEntryActivity', :foreign_key => 'activity_id'
 
+  acts_as_customizable
   validates_presence_of :user_id, :project_id, :costs, :spent_on
   validates_numericality_of :costs, :allow_nil => true, :message => :invalid
   validates_length_of :comments, :maximum => 255, :allow_nil => true
@@ -109,6 +110,15 @@ class CostEntry < ActiveRecord::Base
     self.tyear = spent_on ? spent_on.year : nil
     self.tmonth = spent_on ? spent_on.month : nil
     self.tweek = spent_on ? Date.civil(spent_on.year, spent_on.month, spent_on.day).cweek : nil
+  end
+
+  def editable_custom_field_values(user=nil)
+    visible_custom_field_values
+  end
+
+  # Returns the custom fields that can be edited by the given user
+  def editable_custom_fields(user=nil)
+    editable_custom_field_values(user).map(&:custom_field).uniq
   end
 
 end

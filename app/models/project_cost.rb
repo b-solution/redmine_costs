@@ -1,5 +1,6 @@
 class ProjectCost < ActiveRecord::Base
   unloadable
+  belongs_to :project
 
   def self.create_or_update_cost_entry(time_entry)
     ce = CostEntry.where(time_entry_id: time_entry.id).first_or_initialize
@@ -13,22 +14,12 @@ class ProjectCost < ActiveRecord::Base
     project = time_entry.project
     if project
       user = time_entry.user
-      if (role = user.membership(project)).present?
-        pc = ProjectCost.where(project_id: project.id).detect{|c| c.role_id = role.id}
+        pc = ProjectCost.where(project_id: project.id).detect{|c| c.user_id = user.id}
         if pc
-
           ce.costs = pc.cost * time_entry.hours
           ce.save
         end
-      else
-        if user.admin?
-          pc = ProjectCost.where(project_id: project.id).detect{|c| c.role_id = -1}
-          if pc
-            ce.costs = pc.cost * time_entry.hours
-            ce.save
-          end
-        end
-      end
     end
   end
+  
 end

@@ -1,10 +1,10 @@
 class CostEntryController < ApplicationController
   unloadable
   before_filter :find_cost_entry, :only => [:edit, :update]
-  before_filter :find_cost_entries, :only => [:destroy]
+  before_filter :find_cost_entries, :only => [:destroy,:bulk_update]
   before_filter :find_optional_project, :only => [:new, :create, :index, :report]
 
-  before_filter :authorize, :only => [:edit, :update, :destroy]
+  before_filter :authorize, :only => [:edit, :update, :destroy, :bulk_update]
   before_filter :authorize_global, :only =>  [:new, :create, :edit, :update, :destroy]
 
 
@@ -150,6 +150,24 @@ class CostEntryController < ApplicationController
     end
   end
 
+  def bulk_update
+    attributes = parse_params_for_bulk_cost_entry_attributes(params)
+
+    unsaved_cost_entry_ids = []
+    @cost_entries.each do |cost_entry|
+      cost_entry.reload
+      cost_entry.safe_attributes = attributes
+      call_hook(:controller_cost_entries_bulk_edit_before_save, { :params => params, :cost_entry => cost_entry })
+      unless cost_entry.save
+        logger.info "cost entry could not be updated: #{cost_entry.errors.full_messages}" if logger && logger.info
+        # Keep unsaved cost_entry ids to display them in flash error
+        unsaved_cost_entry_ids << cost_entry.id
+      end
+    end
+    set_flash_from_bulk_cost_entry_save(@cost_entries, unsaved_cost_entry_ids)
+    redirect_back_or_default project_cost_entries_path(@projects.first)
+  end
+
   private
   def find_cost_entry
     @cost_entry = CostEntry.find(params[:id])
@@ -192,6 +210,25 @@ class CostEntryController < ApplicationController
     end
   rescue ActiveRecord::RecordNotFound
     render_404
+  end
+
+  def set_flash_from_bulk_cost_entry_save(cost_entries, unsaved_cost_entry_ids)
+    if unsaved_cost_entry_ids.empty?
+      flash[:notice] = l(:notice_successful_update) unless cost_entries.empty?
+    else
+      flash[:error] = l(:notice_failed_to_save_cost_entries,
+                        :count => unsaved_cost_entry_ids.size,
+                        :total => cost_entries.size,
+                        :ids => '#' + unsaved_cost_entry_ids.join(', #'))
+    end
+  end
+
+
+  def parse_params_for_bulk_cost_entry_attributes(params)
+    attributes = (params[:cost_entry] || {}).reject {|k,v| v.blank?}
+    attributes.keys.each {|k| attributes[k] = '' if attributes[k] == 'none'}
+    attributes[:custom_field_values].reject! {|k,v| v.blank?} if attributes[:custom_field_values]
+    attributes
   end
 end
 

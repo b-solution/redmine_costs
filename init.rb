@@ -11,7 +11,7 @@ Redmine::Plugin.register :redmine_costs do
            }
   project_module :redmine_costs do
     permission :edit_own_cost_entries, :cost_entry => ['index', 'report', 'edit',
-                                                       'update', 'destroy'],
+                                                       'update', 'destroy', 'bulk_update'],
                :project_enumerations => [:update_cost_entry, :destroy_cost_entry]
     permission :log_cost, :cost_entry => ['new', 'create']
   end
@@ -33,4 +33,5 @@ Rails.application.config.to_prepare do
   MyController.send(:include, RedmineCost::MyControllerPatch)
   MyHelper.send(:include, RedmineCost::MyHelperPatch)
   ProjectEnumerationsController.send(:include, RedmineCost::ProjectEnumerationsControllerPatch)
+  ContextMenusController.send(:include, RedmineCost::ContextMenusControllerPatch)
 end

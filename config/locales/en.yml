@@ -9,4 +9,5 @@ en:
    notice_unable_delete_cost_entry: "Unable to delete cost entry"
    include_the_costs_of_the_subprojects: "Include the costs of the subprojects"
    enumeration_activities_cost : 'Cost items (cost tracking)'
+   text_cost_entries_destroy_confirmation : 'Are you sure you want to delete the selected cost entr(y/ies)?'
 
