@@ -1,10 +1,11 @@
 Redmine::Plugin.register :redmine_costs do
   name 'Redmine Costs plugin'
-  author 'Bilel KEDIDI'
+  author 'ISPEHE'
   description 'This is a plugin for Redmine'
-  version '0.0.1'
-  url 'http://github.com/bilel-kedidi/redmine_cost'
-  author_url 'http://github.com/bilel-kedidi'
+  version '1.0.0'
+  url 'http://ispehe.org/'
+  author_url 'http://ispehe.org/'
+
 
   settings :default => {
                'currency' => 'Currency'
@@ -33,5 +34,6 @@ Rails.application.config.to_prepare do
   MyController.send(:include, RedmineCost::MyControllerPatch)
   MyHelper.send(:include, RedmineCost::MyHelperPatch)
   ProjectEnumerationsController.send(:include, RedmineCost::ProjectEnumerationsControllerPatch)
+
   ContextMenusController.send(:include, RedmineCost::ContextMenusControllerPatch)
 end
