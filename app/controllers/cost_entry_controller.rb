@@ -39,12 +39,12 @@ class CostEntryController < ApplicationController
 
   def new
     @cost_entry ||= CostEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
-    @cost_entry.safe_attributes = params[:cost_entry]
+    @cost_entry.safe_attributes = cost_entry_params
   end
 
   def create
     @cost_entry ||= CostEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
-    @cost_entry.safe_attributes = params[:cost_entry]
+    @cost_entry.safe_attributes = cost_entry_params
 
 
     #TODO PERMISSION to add later
@@ -90,11 +90,11 @@ class CostEntryController < ApplicationController
   end
 
   def edit
-    @cost_entry.safe_attributes = params[:cost_entry]
+    @cost_entry.safe_attributes = cost_entry_params
   end
 
   def update
-    @cost_entry.safe_attributes = params[:cost_entry]
+    @cost_entry.safe_attributes = cost_entry_params
     if @cost_entry.save
       respond_to do |format|
         format.html {
@@ -225,10 +225,14 @@ class CostEntryController < ApplicationController
 
 
   def parse_params_for_bulk_cost_entry_attributes(params)
-    attributes = (params[:cost_entry] || {}).reject {|k,v| v.blank?}
+    attributes = (cost_entry_params || {}).reject {|k,v| v.blank?}
     attributes.keys.each {|k| attributes[k] = '' if attributes[k] == 'none'}
     attributes[:custom_field_values].reject! {|k,v| v.blank?} if attributes[:custom_field_values]
     attributes
+  end
+
+  def cost_entry_params
+    Redmine::VERSION::MAJOR >= 3 ? params[:cost_entry].permit! : params[:cost_entry]
   end
 end
 

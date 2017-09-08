@@ -5,7 +5,7 @@ match '/cost_entries/context_menu', :to => 'context_menus#cost_entries', :as => 
 resources :cost_entries,  :controller => 'cost_entry'  do
   get 'report', :on => :collection
   post 'bulk_update', :on => :collection
-  match 'destroy', :on => :collection
+  match 'destroy', :on => :collection, via: [:get, :post, :delete]
 end
 resources :issues do
   resources :cost_entries,  :controller => 'cost_entry'  do

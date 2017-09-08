@@ -4,7 +4,7 @@ class ProjectCostController < ApplicationController
 
   def set_costs
     @project = Project.find(params[:project_id])
-    @project.herit_cost = params[:inherit_cost]
+    @project.herit_cost = params[:inherit_cost].permit!
     @project.save
 
     costs = params['cost']

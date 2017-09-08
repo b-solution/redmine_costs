@@ -26,7 +26,7 @@ module  RedmineCost
                'documents' => :label_document_plural,
                'cost_entries' => :label_cost_plural,
                'timelog' => :label_spent_time
-    }.merge(Redmine::Views::MyPage::Block.additional_blocks).freeze
+    }.merge(Redmine::Views::MyPage.additional_blocks).freeze
   end
 
 end
