@@ -22,7 +22,7 @@ class CostEntryController < ApplicationController
     sort_init(@query.sort_criteria.empty? ? [['spent_on', 'desc']] : @query.sort_criteria)
     sort_update(@query.sortable_columns)
     scope = cost_entry_scope(:order => sort_clause).
-        includes(:project, :user, :issue).
+        includes(:project, :user, :issue).references(:project, :user, :issue).
         preload(:issue => [:project, :tracker, :status, :assigned_to, :priority])
 
     respond_to do |format|
@@ -39,7 +39,7 @@ class CostEntryController < ApplicationController
 
   def new
     @cost_entry ||= CostEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => User.current.today)
-    @cost_entry.safe_attributes = cost_entry_params
+    # @cost_entry.safe_attributes = cost_entry_params
   end
 
   def create
@@ -90,7 +90,7 @@ class CostEntryController < ApplicationController
   end
 
   def edit
-    @cost_entry.safe_attributes = cost_entry_params
+    # @cost_entry.safe_attributes = cost_entry_params
   end
 
   def update

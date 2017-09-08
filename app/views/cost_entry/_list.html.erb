@@ -1,4 +1,4 @@
-<%= form_tag({}) do -%>
+<%= form_tag({}, :data => {:cm_url => cost_entries_context_menu_path}) do -%>
 <%= hidden_field_tag 'back_url', url_for(params) %>
 <div class="autoscroll">
 <table class="list time-entries">
@@ -11,7 +11,7 @@
         :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
     </th>
     <% @query.inline_columns.each do |column| %>
-      <%= column_header(column) %>
+      <%= column_header(@query, column) %>
     <% end %>
     <th></th>
   </tr>
@@ -38,4 +38,4 @@
 </div>
 <% end -%>
 
-<%= context_menu cost_entries_context_menu_path %>
+<%= context_menu  %>
